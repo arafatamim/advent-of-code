@@ -1,6 +1,9 @@
-open System.IO
+(*
+ * Advent of Code 2022 Day 1: Calorie Counting
+ * https://adventofcode.com/2022/day/1
+ *)
 
-let input = File.ReadLines "input.txt" |> List.ofSeq
+let input = System.IO.File.ReadLines "input.txt" |> List.ofSeq
 
 let rec group input result =
     match input with
