@@ -1,3 +1,8 @@
+(*
+ * Advent of Code 2022 Day 4: Camp Cleanup
+ * https://adventofcode.com/2022/day/4
+ *)
+
 let tupleApply f (a, b) = f a, f b
 
 ///"2-4,6-8" -> ("2-4", "6-8")
