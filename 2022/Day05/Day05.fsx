@@ -16,14 +16,14 @@ type CraneModel =
     | CrateMover9001
 
 module Cargo =
-    type t = Stack<char> array
+    type T = Stack<char> array
 
-    let make size : t =
+    let make size : T =
         Array.init size (fun _ -> Stack<char>())
 
-    let push (index: int, value: char) (this: t) = this[ index - 1 ].Push(value)
+    let push (index: int, value: char) (this: T) = this[ index - 1 ].Push(value)
 
-    let move craneModel instruction (this: t) =
+    let move craneModel instruction (this: T) =
         match craneModel with
         | CrateMover9000 ->
             { 1 .. instruction.NumCrates }
@@ -34,7 +34,7 @@ module Cargo =
             |> Seq.rev
             |> Seq.iter (fun x -> this[ instruction.To - 1 ].Push(x))
 
-    let topCrates: t -> string =
+    let topCrates: T -> string =
         Array.map (fun x -> x.Peek()) >> Array.map string >> Array.reduce (+)
 
 let splitInto lines =
