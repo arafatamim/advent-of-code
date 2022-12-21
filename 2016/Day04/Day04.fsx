@@ -8,13 +8,13 @@
 open System
 open FParsec
 
-
+(*
 module Option =
     let mapBoth ifSome ifNone opt =
         match opt with
         | Some x -> Some(ifSome x)
         | None -> Some ifNone
-
+*)
 
 let parseInput str =
     let parser =
@@ -32,12 +32,13 @@ let parseInput str =
 
 let takeTopLetters count =
     // build a collection of letter frequencies
-    Seq.fold (fun dict letter -> dict |> Map.change letter (Option.mapBoth ((+) 1) 1)) Map.empty
+    Seq.countBy id
+    // or Seq.fold (fun dict letter -> dict |> Map.change letter (Option.mapBoth ((+) 1) 1)) Map.empty
     // sort by most frequent letters
-    >> Seq.sortByDescending (fun (KeyValue (k, v)) -> v)
-    // take five most common letters
+    >> Seq.sortBy (fun (k, v) -> -v, k)
+    // take most common letters
     >> Seq.take count
-    >> Seq.map (fun (KeyValue (k, _)) -> k)
+    >> Seq.map fst
     >> Set.ofSeq
 
 
@@ -60,7 +61,6 @@ let totalSectionIdOfRealRooms =
 let decrypt count =
     Seq.map (fun c ->
         let startCode = int 'a'
-
         if Char.IsLetter c then
             let charCode = int c - startCode
             let newCharCode = (charCode + count) % 26
@@ -81,6 +81,7 @@ input
 // Part II
 input
 |> Seq.map (fun (name, sid, _) -> decrypt sid name, sid)
-|> Seq.find (fun (decrypted, _) -> decrypted.Contains("northpole-object-storage"))
-|> snd
-|> printfn "Sector ID of the room where North Pole objects are stored: %d"
+|> Seq.tryFind (fun (decrypted, _) -> decrypted.Contains "northpole-object-storage")
+|> function
+    | Some (_, sid) -> printfn "Sector ID of the room where North Pole objects are stored: %d" sid
+    | None -> printfn "North Pole object storage room not found"
